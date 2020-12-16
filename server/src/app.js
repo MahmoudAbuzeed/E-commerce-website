@@ -9,6 +9,7 @@ const cors = require("cors");
 // Import Router
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
+const categoryRouter = require("./routes/category");
 
 // Database Connection
 mongoose
@@ -31,6 +32,7 @@ app.use(express.json());
 // Routes
 app.use("/api", authRouter);
 app.use("/api/user", usersRouter);
+app.use("/api/category", categoryRouter);
 
 // Run Server
 const PORT = process.env.PORT || 8000;
