@@ -10,6 +10,7 @@ const cors = require("cors");
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
 const categoryRouter = require("./routes/category");
+const productRouter = require("./routes/product");
 
 // Database Connection
 mongoose
@@ -33,6 +34,7 @@ app.use(express.json());
 app.use("/api", authRouter);
 app.use("/api/user", usersRouter);
 app.use("/api/category", categoryRouter);
+app.use("/api/product", productRouter);
 
 // Run Server
 const PORT = process.env.PORT || 8000;

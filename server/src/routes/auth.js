@@ -5,7 +5,7 @@ const {
   adminSignup,
   signin,
   allUser,
-} = require("../controller/auth");
+} = require("../controllers/auth");
 const {
   validateSignupRequest,
   isRequestValidated,

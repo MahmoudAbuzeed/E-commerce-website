@@ -5,7 +5,7 @@ const {
   addCategory,
   editCategory,
   deleteCategory,
-} = require("../controller/category");
+} = require("../controllers/category");
 const multer = require("multer");
 const { loginCheck } = require("../middleware/auth");
 const {
