@@ -1,134 +1,81 @@
 const userModel = require("../models/users");
-const bcrypt = require("bcryptjs");
 
-class User {
-  async getAllUser(req, res) {
-    try {
-      let Users = await userModel
-        .find({})
-        .populate("allProduct.id", "pName pImages pPrice")
-        .populate("user", "name email")
-        .sort({ _id: -1 });
-      if (Users) {
-        return res.json({ Users });
-      }
-    } catch (err) {
-      console.log(err);
+const {
+  getSingleUserController,
+  addUserController,
+  editUserController,
+  deleteUserController,
+  changeUserPasswordController,
+} = require("../services/user");
+
+exports.getAllUser = async (req, res) => {
+  try {
+    let Users = await userModel
+      .find({})
+      .populate("allProduct.id", "pName pImages pPrice")
+      .populate("user", "name email")
+      .sort({ _id: -1 });
+    if (Users) {
+      return res.json({ Users });
     }
+  } catch (err) {
+    console.log(err);
   }
+};
 
-  async getSingleUser(req, res) {
-    let { uId } = req.body;
-    if (uId) {
-      return res.json({ error: "All fields must be required" });
-    } else {
-      try {
-        let User = await userModel
-          .findById(uId)
-          .select("name email phoneNumber userImage updatedAt createdAt");
-        if (User) {
-          return res.json({ User });
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
+exports.getSingleUser = async (req, res) => {
+  let { uId } = req.body;
+  const singleUser = await getSingleUserController.getSingleUser(uId);
+  if (singleUser) {
+    return res.status(201).json({ singleUser: singleUser });
+  } else {
+    return res.status(400).json({ message: "Can not find user" });
   }
+};
 
-  async postAddUser(req, res) {
-    let { allProduct, user, amount, transactionId, address, phone } = req.body;
-    if (
-      !allProduct ||
-      !user ||
-      !amount ||
-      !transactionId ||
-      !address ||
-      !phone
-    ) {
-      return res.json({ message: "All fields must be required" });
-    } else {
-      try {
-        let newUser = new userModel({
-          allProduct,
-          user,
-          amount,
-          transactionId,
-          address,
-          phone,
-        });
-        let save = await newUser.save();
-        if (save) {
-          return res.json({ message: "User created successfully" });
-        }
-      } catch (err) {
-        return res.json({ error: err });
-      }
-    }
+// exports.addUser = async (req, res) => {
+//   let { allProduct, user, amount, transactionId, address, phone } = req.body;
+//   const User = await addUserController.addUser(
+//     allProduct,
+//     user,
+//     amount,
+//     transactionId,
+//     address,
+//     phone
+//   );
+//   if (User) {
+//     return res.status(201).json({ User: User });
+//   } else {
+//     return res.status(400).json({ message: "Can not add user" });
+//   }
+// };
+
+exports.editUser = async (req, res) => {
+  let { uId, name, phoneNumber } = req.body;
+  const editedUser = await editUserController.editUser(uId, name, phoneNumber);
+  if (editedUser) {
+    return res.status(201).json({ editedUser: editedUser });
+  } else {
+    return res.status(400).json({ message: "Can not edit user" });
   }
+};
 
-  async postEditUser(req, res) {
-    let { uId, name, phoneNumber } = req.body;
-    if (!uId || !name || !phoneNumber) {
-      return res.json({ message: "All filled must be required" });
-    } else {
-      let currentUser = userModel.findByIdAndUpdate(uId, {
-        name: name,
-        phoneNumber: phoneNumber,
-        updatedAt: Date.now(),
-      });
-      currentUser.exec((err, result) => {
-        if (err) console.log(err);
-        return res.json({ success: "User updated successfully" });
-      });
-    }
+exports.deleteUser = async (req, res) => {
+  let { uId } = req.body;
+  const deletedUser = await deleteUserController.deleteUser(uId);
+  return res.status(201).json({ message: "User Deleted" });
+};
+
+exports.changeUserPassword = async (req, res) => {
+  let { uId, oldPassword, newPassword } = req.body;
+  const changedPassword = await changeUserPasswordController.changeUserPassword(
+    uId,
+    oldPassword,
+    newPassword
+  );
+  if (changedPassword) {
+    return res.status(201).json({ changedPassword: changedPassword });
+  } else {
+    return res.status(400).json({ message: "Your old password is wrong!!" });
   }
-
-  async getDeleteUser(req, res) {
-    let { uId, status } = req.body;
-    if (!uId || !status) {
-      return res.json({ message: "All fields must be required" });
-    } else {
-      let currentUser = userModel.findByIdAndUpdate(uId, {
-        status: status,
-        updatedAt: Date.now(),
-      });
-      currentUser.exec((err, result) => {
-        if (err) console.log(err);
-        return res.json({ success: "User updated successfully" });
-      });
-    }
-  }
-
-  async changePassword(req, res) {
-    let { uId, oldPassword, newPassword } = req.body;
-    if (!uId || !oldPassword || !newPassword) {
-      return res.json({ message: "All fields must be required" });
-    } else {
-      const data = await userModel.findOne({ _id: uId });
-      if (!data) {
-        return res.json({
-          error: "Invalid user",
-        });
-      } else {
-        const oldPassCheck = await bcrypt.compare(oldPassword, data.password);
-        if (oldPassCheck) {
-          newPassword = bcrypt.hashSync(newPassword, 10);
-          let passChange = userModel.findOneAndUpdate(uId, {
-            password: newPassword,
-          });
-          passChange.exec((err, result) => {
-            if (err) console.log(err);
-            return res.json({ success: "Password updated successfully" });
-          });
-        } else {
-          return res.json({
-            error: "Your old password is wrong!!",
-          });
-        }
-      }
-    }
-  }
-}
-
-const ordersController = new User();
-module.exports = ordersController;
+};
