@@ -10,9 +10,20 @@ const {
   editProduct,
   deleteProduct,
   getSingleProduct,
-  addReview,
-  deleteReview,
+  //addReview,
+  //deleteReview,
 } = require("../controllers/product");
+const {
+  isRequestValidated,
+  validateEditProductRequest,
+  validateDeleteProductRequest,
+  validateGetProductByCategoryRequest,
+  validateGetProductByPriceRequest,
+  validateGetSingleProductRequest,
+  validateGetWishProductRequest,
+  validateGetCartProductRequest,
+} = require("../validators/product");
+
 const multer = require("multer");
 
 var storage = multer.diskStorage({
@@ -27,15 +38,51 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/all-product", getAllProduct);
-router.post("/product-by-category", getProductByCategory);
-router.post("/product-by-price", getProductByPrice);
-router.post("/wish-product", getWishProduct);
-router.post("/cart-product", getCartProduct);
+
+router.post(
+  "/product-by-category",
+  validateGetProductByCategoryRequest,
+  isRequestValidated,
+  getProductByCategory
+);
+router.post(
+  "/product-by-price",
+  validateGetProductByPriceRequest,
+  isRequestValidated,
+  getProductByPrice
+);
+router.post(
+  "/wish-product",
+  validateGetWishProductRequest,
+  isRequestValidated,
+  getWishProduct
+);
+router.post(
+  "/cart-product",
+  validateGetCartProductRequest,
+  isRequestValidated,
+  getCartProduct
+);
 
 router.post("/add-product", upload.any(), addProduct);
-router.post("/edit-product", editProduct);
-router.post("/delete-product", deleteProduct);
-router.post("/single-product", getSingleProduct);
+router.post(
+  "/edit-product",
+  validateEditProductRequest,
+  isRequestValidated,
+  editProduct
+);
+router.post(
+  "/delete-product",
+  validateDeleteProductRequest,
+  isRequestValidated,
+  deleteProduct
+);
+router.post(
+  "/single-product",
+  validateGetSingleProductRequest,
+  isRequestValidated,
+  getSingleProduct
+);
 
 // router.post("/add-review", addReview);
 // router.post("/delete-review", deleteReview);
