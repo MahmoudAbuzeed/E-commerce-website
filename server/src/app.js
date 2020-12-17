@@ -13,6 +13,7 @@ const categoryRouter = require("./routes/category");
 const productRouter = require("./routes/product");
 const orderRouter = require("./routes/order");
 const customizeRouter = require("./routes/customize");
+const brainTreeRouter = require("./routes/braintree");
 
 // Database Connection
 mongoose
@@ -39,6 +40,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/product", productRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/customize", customizeRouter);
+app.use("/api", brainTreeRouter);
 
 // Run Server
 const PORT = process.env.PORT || 8000;
