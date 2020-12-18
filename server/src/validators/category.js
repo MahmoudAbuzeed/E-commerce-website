@@ -5,7 +5,7 @@ exports.validateAddCategoryRequest = [
   check("cDescription")
     .notEmpty()
     .withMessage("Category Description is required"),
-  check("cStatus").notEmpty().withMessage("Category Stetus is required"),
+  check("cStatus").notEmpty().withMessage("Category Status is required"),
   check("cImage").notEmpty().withMessage("Category Image is required"),
 ];
 

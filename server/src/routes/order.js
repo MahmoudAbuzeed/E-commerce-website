@@ -8,10 +8,38 @@ const {
   deleteOrder,
 } = require("../controllers/order");
 
-router.get("/all-orders", getAllOrders);
-router.post("/order-by-user", getOrderByUser);
+const {
+  validateCreateOrderRequest,
+  validateDeleteOrderRequest,
+  validateGetOrderByUserRequest,
+  validateUpdateOrderRequest,
+  isRequestValidated,
+} = require("../validators/order");
 
-router.post("/create-order", createOrder);
-router.post("/update-order", updateOrder);
-router.post("/delete-order", deleteOrder);
+router.get("/all-orders", getAllOrders);
+router.post(
+  "/order-by-user",
+  validateGetOrderByUserRequest,
+  isRequestValidated,
+  getOrderByUser
+);
+
+router.post(
+  "/create-order",
+  validateCreateOrderRequest,
+  isRequestValidated,
+  createOrder
+);
+router.post(
+  "/update-order",
+  validateUpdateOrderRequest,
+  isRequestValidated,
+  updateOrder
+);
+router.post(
+  "/delete-order",
+  validateDeleteOrderRequest,
+  isRequestValidated,
+  deleteOrder
+);
 module.exports = router;
