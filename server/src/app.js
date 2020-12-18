@@ -7,13 +7,18 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 // Import Router
-const authRouter = require("./routes/auth");
-const usersRouter = require("./routes/users");
-const categoryRouter = require("./routes/category");
-const productRouter = require("./routes/product");
-const orderRouter = require("./routes/order");
-const customizeRouter = require("./routes/customize");
-const brainTreeRouter = require("./routes/braintree");
+const Router = require("./routes/index");
+const { handleError } = require("./Shared/lib/error");
+const logger = require("./Shared/lib/logger");
+const expressRequestId = require("express-request-id")();
+const requestLogger = require("./Shared/lib/requestLogger");
+const { PAGE_NOT_FOUND } = require("./Shared/constants");
+
+// Run Server
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log("Server is running on ", PORT);
+});
 
 // Database Connection
 mongoose
@@ -25,6 +30,8 @@ mongoose
   .then(() => console.log("Mongo Database Connected Successfully"))
   .catch((err) => console.log("Database Not Connected !!!"));
 
+app.use(expressRequestId);
+app.use(requestLogger);
 // Middleware
 app.use(morgan("dev"));
 app.use(cookieParser());
@@ -34,16 +41,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Routes
-app.use("/api", authRouter);
-app.use("/api/user", usersRouter);
-app.use("/api/category", categoryRouter);
-app.use("/api/product", productRouter);
-app.use("/api/order", orderRouter);
-app.use("/api/customize", customizeRouter);
-app.use("/api", brainTreeRouter);
+app.use("", Router);
+app.use((req, res) => {
+  logger.error(req.method, req.originalUrl, PAGE_NOT_FOUND);
+  return handleError({ statusCode: 404, message: PAGE_NOT_FOUND }, res);
+});
 
-// Run Server
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log("Server is running on ", PORT);
+app.use((err, req, res, next) => {
+  logger.error(err);
+  handleError(err, res);
 });
