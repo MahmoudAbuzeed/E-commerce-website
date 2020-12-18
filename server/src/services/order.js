@@ -1,38 +1,34 @@
 const orderModel = require("../models/orders");
 
 class OrderService {
+  async getAllOrders() {
+    let Orders = await orderModel
+      .find({})
+      .populate("allProduct.id", "pName pImages pPrice")
+      .populate("user", "name email")
+      .sort({ _id: -1 });
+    return Orders;
+  }
   async getOrderByUser(uId) {
-    try {
-      let Order = await orderModel
-        .find({ user: uId })
-        .populate("allProduct.id", "pName pImages pPrice")
-        .populate("user", "name email")
-        .sort({ _id: -1 });
-      if (Order) {
-        return Order;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let Order = await orderModel
+      .find({ user: uId })
+      .populate("allProduct.id", "pName pImages pPrice")
+      .populate("user", "name email")
+      .sort({ _id: -1 });
+    return Order;
   }
 
   async createOrder(allProduct, user, amount, transactionId, address, phone) {
-    try {
-      let newOrder = new orderModel({
-        allProduct,
-        user,
-        amount,
-        transactionId,
-        address,
-        phone,
-      });
-      let save = await newOrder.save();
-      if (save) {
-        return save;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let newOrder = new orderModel({
+      allProduct,
+      user,
+      amount,
+      transactionId,
+      address,
+      phone,
+    });
+    let save = await newOrder.save();
+    return save;
   }
 
   async updateOrder(oId, status) {
@@ -46,14 +42,8 @@ class OrderService {
   }
 
   async deleteOrder(oId) {
-    try {
-      let deleteOrder = await orderModel.findByIdAndDelete(oId);
-      if (deleteOrder) {
-        return deleteOrder;
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    let deleteOrder = await orderModel.findByIdAndDelete(oId);
+    return deleteOrder;
   }
 }
 

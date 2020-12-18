@@ -1,19 +1,26 @@
 const productModel = require("../models/products");
 const fs = require("fs");
 
-// Delete image from static folder
-function deleteImages(images) {
-  for (var i = 0; i < images.length; i++) {
-    let filePath = `../server/public/uploads/products/${images[i].filename}`;
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        return err;
-      }
-    });
-  }
-}
-
 class ProductService {
+  // // Delete image from static folder
+  // async deleteImages(images) {
+  //   for (var i = 0; i < images.length; i++) {
+  //     let filePath = `../server/public/uploads/products/${images[i].filename}`;
+  //     fs.unlink(filePath, (err) => {
+  //       if (err) {
+  //         return err;
+  //       }
+  //     });
+  //   }
+  // }
+
+  async getAllProducts() {
+    let Products = await productModel
+      .find({})
+      .populate("pCategory", "_id cName")
+      .sort({ _id: -1 });
+    return Products;
+  }
   async addProduct(
     pName,
     pDescription,
@@ -24,26 +31,22 @@ class ProductService {
     pStatus,
     images
   ) {
-    try {
-      let allImages = [];
-      for (const img of images) {
-        allImages.push(img.filename);
-      }
-      let newProduct = new productModel({
-        pImages: allImages,
-        pName,
-        pDescription,
-        pPrice,
-        pQuantity,
-        pCategory,
-        pOffer,
-        pStatus,
-      });
-      let save = await newProduct.save();
-      return save;
-    } catch (err) {
-      console.log(err);
+    let allImages = [];
+    for (const img of images) {
+      allImages.push(img.filename);
     }
+    let newProduct = new productModel({
+      pImages: allImages,
+      pName,
+      pDescription,
+      pPrice,
+      pQuantity,
+      pCategory,
+      pOffer,
+      pStatus,
+    });
+    let save = await newProduct.save();
+    return save;
   }
 
   async editProduct(
@@ -88,70 +91,42 @@ class ProductService {
   }
 
   async getSingleProduct(pId) {
-    try {
-      let singleProduct = await productModel
-        .findById(pId)
-        .populate("pCategory", "cName")
-        .populate("pRatingsReviews.user", "name email userImage");
-      if (singleProduct) {
-        return singleProduct;
-      }
-    } catch (err) {
-      console.log(err);
+    let singleProduct = await productModel
+      .findById(pId)
+      .populate("pCategory", "cName")
+      .populate("pRatingsReviews.user", "name email userImage");
+    if (singleProduct) {
+      return singleProduct;
     }
   }
 
   async getProductByCategory(cId) {
-    try {
-      let products = await productModel
-        .find({ pCategory: cId })
-        .populate("pCategory", "cName");
-      if (products) {
-        return products;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let products = await productModel
+      .find({ pCategory: cId })
+      .populate("pCategory", "cName");
+    return products;
   }
 
   async getProductByPrice(price) {
-    try {
-      let products = await productModel
-        .find({ pPrice: { $lt: price } })
-        .populate("pCategory", "cName")
-        .sort({ pPrice: -1 });
-      if (products) {
-        return products;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let products = await productModel
+      .find({ pPrice: { $lt: price } })
+      .populate("pCategory", "cName")
+      .sort({ pPrice: -1 });
+    return products;
   }
 
   async getWishProduct(productArray) {
-    try {
-      let wishProducts = await productModel.find({
-        _id: { $in: productArray },
-      });
-      if (wishProducts) {
-        return wishProducts;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let wishProducts = await productModel.find({
+      _id: { $in: productArray },
+    });
+    return wishProducts;
   }
 
   async getCartProduct(productArray) {
-    try {
-      let cartProducts = await productModel.find({
-        _id: { $in: productArray },
-      });
-      if (cartProducts) {
-        return cartProducts;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let cartProducts = await productModel.find({
+      _id: { $in: productArray },
+    });
+    return cartProducts;
   }
 }
 

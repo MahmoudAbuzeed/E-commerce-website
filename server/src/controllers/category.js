@@ -2,23 +2,17 @@ const categoryModel = require("../models/categories");
 
 const CategoryService = require("../services/category");
 
-const categoryController = new CategoryService();
+const categoryService = new CategoryService();
 
 exports.getAllCategory = async (req, res) => {
-  try {
-    let Categories = await categoryModel.find({}).sort({ _id: -1 });
-    if (Categories) {
-      return res.json({ Categories });
-    }
-  } catch (err) {
-    console.log(err);
-  }
+  const Categories = await categoryService.getAllCategory();
+  return res.status(200).json({ AllCategories: Categories });
 };
 
 exports.addCategory = async (req, res) => {
   let { cName, cDescription, cStatus } = req.body;
   let cImage = req.file.filename;
-  const addedCategory = await categoryController.addCategory(
+  const addedCategory = await categoryService.addCategory(
     cName,
     cDescription,
     cStatus,
@@ -33,7 +27,7 @@ exports.addCategory = async (req, res) => {
 
 exports.editCategory = async (req, res) => {
   let { cId, cName, cDescription, cStatus } = req.body;
-  const editedCategory = await categoryController.editCategory(
+  const editedCategory = await categoryService.editCategory(
     cId,
     cName,
     cDescription,
@@ -48,6 +42,6 @@ exports.editCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
   let { cId } = req.body;
-  await categoryController.deleteCategory(cId);
+  await categoryService.deleteCategory(cId);
   return res.status(201).json({ message: "Category Deleted" });
 };

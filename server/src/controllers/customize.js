@@ -1,26 +1,14 @@
-const customizeModel = require("../models/customize");
-const categoryModel = require("../models/categories");
-const productModel = require("../models/products");
-const orderModel = require("../models/orders");
-const userModel = require("../models/users");
-
 const CustomizeSlideBarService = require("../services/customize");
-const customizeController = new CustomizeSlideBarService();
+const customizeService = new CustomizeSlideBarService();
 
 exports.getImages = async (req, res) => {
-  try {
-    let Images = await customizeModel.find({});
-    if (Images) {
-      return res.json({ Images });
-    }
-  } catch (err) {
-    console.log(err);
-  }
+  const Images = await customizeService.getImages();
+  return res.status(200).json({ Images: Images });
 };
 
 exports.uploadSlideImage = async (req, res) => {
   let image = req.file.filename;
-  const ImageUploaded = await customizeController.uploadSlideImage(image);
+  const ImageUploaded = await customizeService.uploadSlideImage(image);
   if (ImageUploaded) {
     return res.status(201).json({ ImageUploaded: ImageUploaded });
   } else {
@@ -30,20 +18,11 @@ exports.uploadSlideImage = async (req, res) => {
 
 exports.deleteSlideImage = async (req, res) => {
   let { id } = req.body;
-  await customizeController.deleteSlideImage(id);
+  await customizeService.deleteSlideImage(id);
   return res.status(201).json({ message: "Image Deleted" });
 };
 
 exports.getAllData = async (req, res) => {
-  try {
-    let Categories = await categoryModel.find({}).count();
-    let Products = await productModel.find({}).count();
-    let Orders = await orderModel.find({}).count();
-    let Users = await userModel.find({}).count();
-    if (Categories && Products && Orders) {
-      return res.json({ Categories, Products, Orders, Users });
-    }
-  } catch (err) {
-    console.log(err);
-  }
+  const AllData = await customizeService.getAllData();
+  return res.status(200).json({ AllData: AllData });
 };

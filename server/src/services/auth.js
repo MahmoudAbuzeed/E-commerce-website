@@ -4,6 +4,10 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/keys");
 
 class AuthService {
+  async allUser() {
+    let allUser = await userModel.find({});
+    return allUser;
+  }
   async usersSignup(name, email, password) {
     password = bcrypt.hashSync(password);
     try {
