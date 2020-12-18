@@ -3,8 +3,8 @@ const userModel = require("../models/users");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/keys");
 
-class Signup {
-  async userSignup(name, email, password) {
+class AuthService {
+  async usersSignup(name, email, password) {
     try {
       password = bcrypt.hashSync(password);
       const data = await userModel.findOne({ email: email });
@@ -44,9 +44,7 @@ class Signup {
       console.log(err);
     }
   }
-}
 
-class Signin {
   async signin(email, password) {
     try {
       const data = await userModel.findOne({ email: email });
@@ -76,6 +74,4 @@ class Signin {
   }
 }
 
-const signupController = new Signup();
-const signinController = new Signin();
-module.exports = { signupController, signinController };
+module.exports = AuthService;

@@ -13,7 +13,7 @@ function deleteImages(images) {
   }
 }
 
-class AddProduct {
+class ProductService {
   async addProduct(
     pName,
     pDescription,
@@ -45,9 +45,7 @@ class AddProduct {
       console.log(err);
     }
   }
-}
 
-class EditProduct {
   async editProduct(
     pId,
     pName,
@@ -72,9 +70,7 @@ class EditProduct {
       return editedProduct;
     }
   }
-}
 
-class DeleteProduct {
   async deleteProduct(pId) {
     let deleteProductObj = await productModel.findById(pId);
     let deleteProduct = await productModel.findByIdAndDelete(pId);
@@ -90,9 +86,7 @@ class DeleteProduct {
       }
     }
   }
-}
 
-class GetSingleProduct {
   async getSingleProduct(pId) {
     try {
       let singleProduct = await productModel
@@ -106,9 +100,7 @@ class GetSingleProduct {
       console.log(err);
     }
   }
-}
 
-class GetProductByCategory {
   async getProductByCategory(cId) {
     try {
       let products = await productModel
@@ -121,9 +113,7 @@ class GetProductByCategory {
       console.log(err);
     }
   }
-}
 
-class GetProductByPrice {
   async getProductByPrice(price) {
     try {
       let products = await productModel
@@ -137,9 +127,7 @@ class GetProductByPrice {
       console.log(err);
     }
   }
-}
 
-class GetWishProduct {
   async getWishProduct(productArray) {
     try {
       let wishProducts = await productModel.find({
@@ -152,9 +140,7 @@ class GetWishProduct {
       console.log(err);
     }
   }
-}
 
-class GetCartProduct {
   async getCartProduct(productArray) {
     try {
       let cartProducts = await productModel.find({
@@ -168,6 +154,7 @@ class GetCartProduct {
     }
   }
 }
+
 /*
 class AddReview {
   async addReview(pId, uId, rating, review) {
@@ -210,26 +197,4 @@ class DeleteReview {
   }
 } */
 
-const addProductController = new AddProduct();
-const editProductController = new EditProduct();
-const deleteProductController = new DeleteProduct();
-const getSingleProductController = new GetSingleProduct();
-const getProductByCategoryController = new GetProductByCategory();
-const getProductByPriceController = new GetProductByPrice();
-const getWishProductController = new GetWishProduct();
-const getCartProductController = new GetCartProduct();
-/*const addReviewController = new AddReview();
-const deleteReviewController = new DeleteReview();*/
-
-module.exports = {
-  addProductController,
-  editProductController,
-  deleteProductController,
-  getSingleProductController,
-  getProductByCategoryController,
-  getProductByPriceController,
-  getWishProductController,
-  getCartProductController,
-  /*addReviewController,
-  deleteReviewController,*/
-};
+module.exports = ProductService;

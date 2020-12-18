@@ -21,6 +21,6 @@ router.post(
   adminSignup
 );
 router.post("/signin", validateSigninRequest, isRequestValidated, signin);
-router.post("/user", loginCheck, adminMiddleware, allUser);
+router.post("/all-users", loginCheck, adminMiddleware, allUser);
 
 module.exports = router;

@@ -1,12 +1,7 @@
 const userModel = require("../models/users");
 
-const {
-  getSingleUserController,
-  addUserController,
-  editUserController,
-  deleteUserController,
-  changeUserPasswordController,
-} = require("../services/user");
+const UserService = require("../services/user");
+const userController = new UserService();
 
 exports.getAllUser = async (req, res) => {
   try {
@@ -25,7 +20,7 @@ exports.getAllUser = async (req, res) => {
 
 exports.getSingleUser = async (req, res) => {
   let { uId } = req.body;
-  const singleUser = await getSingleUserController.getSingleUser(uId);
+  const singleUser = await userController.getSingleUser(uId);
   if (singleUser) {
     return res.status(201).json({ singleUser: singleUser });
   } else {
@@ -33,26 +28,9 @@ exports.getSingleUser = async (req, res) => {
   }
 };
 
-// exports.addUser = async (req, res) => {
-//   let { allProduct, user, amount, transactionId, address, phone } = req.body;
-//   const User = await addUserController.addUser(
-//     allProduct,
-//     user,
-//     amount,
-//     transactionId,
-//     address,
-//     phone
-//   );
-//   if (User) {
-//     return res.status(201).json({ User: User });
-//   } else {
-//     return res.status(400).json({ message: "Can not add user" });
-//   }
-// };
-
 exports.editUser = async (req, res) => {
   let { uId, name, phoneNumber } = req.body;
-  const editedUser = await editUserController.editUser(uId, name, phoneNumber);
+  const editedUser = await userController.editUser(uId, name, phoneNumber);
   if (editedUser) {
     return res.status(201).json({ editedUser: editedUser });
   } else {
@@ -62,13 +40,13 @@ exports.editUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   let { uId } = req.body;
-  const deletedUser = await deleteUserController.deleteUser(uId);
+  await userController.deleteUser(uId);
   return res.status(201).json({ message: "User Deleted" });
 };
 
 exports.changeUserPassword = async (req, res) => {
   let { uId, oldPassword, newPassword } = req.body;
-  const changedPassword = await changeUserPasswordController.changeUserPassword(
+  const changedPassword = await userController.changeUserPassword(
     uId,
     oldPassword,
     newPassword

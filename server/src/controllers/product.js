@@ -1,17 +1,7 @@
 const productModel = require("../models/products");
 
-const {
-  addProductController,
-  editProductController,
-  deleteProductController,
-  getSingleProductController,
-  getProductByCategoryController,
-  getProductByPriceController,
-  getWishProductController,
-  getCartProductController,
-  addReviewController,
-  deleteReviewController,
-} = require("../services/product");
+const Productservice = require("../services/product");
+const productController = new Productservice();
 
 exports.addProduct = async (req, res) => {
   let {
@@ -24,7 +14,7 @@ exports.addProduct = async (req, res) => {
     pStatus,
   } = req.body;
   let images = req.files;
-  const addedProduct = await addProductController.addProduct(
+  const addedProduct = await productController.addProduct(
     pName,
     pDescription,
     pPrice,
@@ -66,7 +56,7 @@ exports.editProduct = async (req, res) => {
     pOffer,
     pStatus,
   } = req.body;
-  const editedProduct = await editProductController.editProduct(
+  const editedProduct = await productController.editProduct(
     pId,
     pName,
     pDescription,
@@ -85,13 +75,13 @@ exports.editProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   let { pId } = req.body;
-  const DeletedProduct = await deleteProductController.deleteProduct(pId);
+  await productController.deleteProduct(pId);
   return res.status(201).json({ message: "Product Deleted" });
 };
 
 exports.getSingleProduct = async (req, res) => {
   let { pId } = req.body;
-  const singleProduct = await getSingleProductController.getSingleProduct(pId);
+  const singleProduct = await productController.getSingleProduct(pId);
   if (singleProduct) {
     return res.status(200).json({ singleProduct: singleProduct });
   } else {
@@ -101,9 +91,7 @@ exports.getSingleProduct = async (req, res) => {
 
 exports.getProductByCategory = async (req, res) => {
   let { cId } = req.body;
-  const productByCategory = await getProductByCategoryController.getProductByCategory(
-    cId
-  );
+  const productByCategory = await productController.getProductByCategory(cId);
   if (productByCategory) {
     return res.status(200).json({ productByCategory: productByCategory });
   } else {
@@ -113,9 +101,7 @@ exports.getProductByCategory = async (req, res) => {
 
 exports.getProductByPrice = async (req, res) => {
   let { price } = req.body;
-  const productByPrice = await getProductByPriceController.getProductByPrice(
-    price
-  );
+  const productByPrice = await productController.getProductByPrice(price);
   if (productByPrice) {
     return res.status(200).json({ productByPrice: productByPrice });
   } else {
@@ -125,9 +111,7 @@ exports.getProductByPrice = async (req, res) => {
 
 exports.getWishProduct = async (req, res) => {
   let { productArray } = req.body;
-  const wishProducts = await getWishProductController.getWishProduct(
-    productArray
-  );
+  const wishProducts = await productController.getWishProduct(productArray);
   if (wishProducts) {
     return res.status(200).json({ wishProducts: wishProducts });
   } else {
@@ -137,9 +121,7 @@ exports.getWishProduct = async (req, res) => {
 
 exports.getCartProduct = async (req, res) => {
   let { productArray } = req.body;
-  const cartProducts = await getCartProductController.getCartProduct(
-    productArray
-  );
+  const cartProducts = await productController.getCartProduct(productArray);
   if (cartProducts) {
     return res.status(200).json({ cartProducts: cartProducts });
   } else {

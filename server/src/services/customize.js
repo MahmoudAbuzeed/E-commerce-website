@@ -1,7 +1,7 @@
 const fs = require("fs");
 const customizeModel = require("../models/customize");
 
-class UploadSlideImage {
+class CustomizeSlideBarService {
   async uploadSlideImage(image) {
     try {
       let newCustomzie = new customizeModel({
@@ -15,9 +15,7 @@ class UploadSlideImage {
       console.log(err);
     }
   }
-}
 
-class DeleteSlideImage {
   async deleteSlideImage(id) {
     try {
       let deletedSlideImage = await customizeModel.findById(id);
@@ -39,10 +37,4 @@ class DeleteSlideImage {
   }
 }
 
-const uploadSideImageController = new UploadSlideImage();
-const deleteSideImageController = new DeleteSlideImage();
-
-module.exports = {
-  uploadSideImageController,
-  deleteSideImageController,
-};
+module.exports = CustomizeSlideBarService;

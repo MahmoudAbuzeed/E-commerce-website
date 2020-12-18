@@ -1,6 +1,6 @@
 const orderModel = require("../models/orders");
 
-class GetOrderByUser {
+class OrderService {
   async getOrderByUser(uId) {
     try {
       let Order = await orderModel
@@ -15,9 +15,7 @@ class GetOrderByUser {
       console.log(err);
     }
   }
-}
 
-class CreateOrder {
   async createOrder(allProduct, user, amount, transactionId, address, phone) {
     try {
       let newOrder = new orderModel({
@@ -36,9 +34,7 @@ class CreateOrder {
       console.log(err);
     }
   }
-}
 
-class UpdateOrder {
   async updateOrder(oId, status) {
     const order = await orderModel.findById(oId);
     if (order) {
@@ -48,8 +44,7 @@ class UpdateOrder {
       return editedOrder;
     }
   }
-}
-class DeleteOrder {
+
   async deleteOrder(oId) {
     try {
       let deleteOrder = await orderModel.findByIdAndDelete(oId);
@@ -62,14 +57,4 @@ class DeleteOrder {
   }
 }
 
-const getOrderByUserController = new GetOrderByUser();
-const createOrderController = new CreateOrder();
-const updateOrderController = new UpdateOrder();
-const deleteOrderController = new DeleteOrder();
-
-module.exports = {
-  getOrderByUserController,
-  createOrderController,
-  updateOrderController,
-  deleteOrderController,
-};
+module.exports = OrderService;

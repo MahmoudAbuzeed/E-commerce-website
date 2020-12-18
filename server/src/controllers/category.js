@@ -1,10 +1,8 @@
 const categoryModel = require("../models/categories");
 
-const {
-  addCategoryController,
-  editCategoryController,
-  deleteCategoryController,
-} = require("../services/category");
+const CategoryService = require("../services/category");
+
+const categoryController = new CategoryService();
 
 exports.getAllCategory = async (req, res) => {
   try {
@@ -20,7 +18,7 @@ exports.getAllCategory = async (req, res) => {
 exports.addCategory = async (req, res) => {
   let { cName, cDescription, cStatus } = req.body;
   let cImage = req.file.filename;
-  const addedCategory = await addCategoryController.addCategory(
+  const addedCategory = await categoryController.addCategory(
     cName,
     cDescription,
     cStatus,
@@ -35,7 +33,7 @@ exports.addCategory = async (req, res) => {
 
 exports.editCategory = async (req, res) => {
   let { cId, cName, cDescription, cStatus } = req.body;
-  const editedCategory = await editCategoryController.editCategory(
+  const editedCategory = await categoryController.editCategory(
     cId,
     cName,
     cDescription,
@@ -50,6 +48,6 @@ exports.editCategory = async (req, res) => {
 
 exports.deleteCategory = async (req, res) => {
   let { cId } = req.body;
-  const deletedCategory = await deleteCategoryController.deleteCategory(cId);
+  await categoryController.deleteCategory(cId);
   return res.status(201).json({ message: "Category Deleted" });
 };

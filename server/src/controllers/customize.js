@@ -4,10 +4,8 @@ const productModel = require("../models/products");
 const orderModel = require("../models/orders");
 const userModel = require("../models/users");
 
-const {
-  uploadSideImageController,
-  deleteSideImageController,
-} = require("../services/customize");
+const CustomizeSlideBarService = require("../services/customize");
+const customizeController = new CustomizeSlideBarService();
 
 exports.getImages = async (req, res) => {
   try {
@@ -22,7 +20,7 @@ exports.getImages = async (req, res) => {
 
 exports.uploadSlideImage = async (req, res) => {
   let image = req.file.filename;
-  const ImageUploaded = await uploadSideImageController.uploadSlideImage(image);
+  const ImageUploaded = await customizeController.uploadSlideImage(image);
   if (ImageUploaded) {
     return res.status(201).json({ ImageUploaded: ImageUploaded });
   } else {
@@ -32,7 +30,7 @@ exports.uploadSlideImage = async (req, res) => {
 
 exports.deleteSlideImage = async (req, res) => {
   let { id } = req.body;
-  const ImageDeleted = await deleteSideImageController.deleteSlideImage(id);
+  await customizeController.deleteSlideImage(id);
   return res.status(201).json({ message: "Image Deleted" });
 };
 

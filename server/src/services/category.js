@@ -1,7 +1,7 @@
 const categoryModel = require("../models/categories");
 const fs = require("fs");
 
-class addCategory {
+class CategoryService {
   async addCategory(cName, cDescription, cStatus, cImage) {
     const filePath = `../server/public/uploads/categories/${cImage}`;
 
@@ -27,9 +27,7 @@ class addCategory {
       console.log(err);
     }
   }
-}
 
-class EditCategory {
   async editCategory(cId, cName, cDescription, cStatus) {
     const category = await categoryModel.findById(cId);
     if (category) {
@@ -41,9 +39,7 @@ class EditCategory {
       return editedCategory;
     }
   }
-}
 
-class DeleteCategory {
   async deleteCategory(cId) {
     try {
       let deletedCategoryFile = await categoryModel.findById(cId);
@@ -64,12 +60,4 @@ class DeleteCategory {
   }
 }
 
-const addCategoryController = new addCategory();
-const editCategoryController = new EditCategory();
-const deleteCategoryController = new DeleteCategory();
-
-module.exports = {
-  addCategoryController,
-  editCategoryController,
-  deleteCategoryController,
-};
+module.exports = CategoryService;
