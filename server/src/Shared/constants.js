@@ -1,6 +1,7 @@
 const REMOVED_SUCCESS_MSG = "Item removed";
 const INVALID_MSG = "Invalid email or password";
 const EXISTS_MSG = "Item already exists";
+const EMAIL_EXISTS_MSG = "Item already exists";
 const FAILURE_UPDATING_MSG = "Updating failure";
 const FAILURE_UPLOADING_MSG = "Uploading failure";
 const FAILURE_CREATING_MSG = "Creating failure";
@@ -16,6 +17,7 @@ module.exports = {
   PAGE_NOT_FOUND,
   INVALID_MSG,
   EXISTS_MSG,
+  EMAIL_EXISTS_MSG,
   FAILURE_OLD_PASSWORD_MSG,
   NOT_FOUND_MSG,
 };

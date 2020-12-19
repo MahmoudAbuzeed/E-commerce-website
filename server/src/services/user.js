@@ -1,5 +1,6 @@
 const userModel = require("../models/users");
 const bcrypt = require("bcryptjs");
+const { INVALID_MSG } = require("../Shared/constants");
 
 class UserService {
   async getAllUsers() {
@@ -38,7 +39,7 @@ class UserService {
     const data = await userModel.findOne({ _id: uId });
     if (!data) {
       return {
-        error: "Invalid user",
+        error: INVALID_MSG,
       };
     } else {
       const oldPassCheck = await bcrypt.compare(oldPassword, data.password);
@@ -51,11 +52,6 @@ class UserService {
           let passChange = await user.save();
           return passChange;
         }
-
-        //let passChange = userModel.findOneAndUpdate(uId, {
-        //  password: newPassword,
-        //});
-        //return passChange;
       }
     }
   }

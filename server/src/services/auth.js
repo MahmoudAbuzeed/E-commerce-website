@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const userModel = require("../models/users");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/keys");
+const { EMAIL_EXISTS_MSG } = require("../Shared/constants");
 
 class AuthService {
   async allUser() {
@@ -11,7 +12,7 @@ class AuthService {
   async usersSignup(name, email, password) {
     const data = await userModel.findOne({ email: email });
     if (data) {
-      return { error: "Email already exists" };
+      return { error: EMAIL_EXISTS_MSG };
     } else {
       password = bcrypt.hashSync(password);
       let newUser = new userModel({
@@ -27,7 +28,7 @@ class AuthService {
   async adminSignup(name, email, password) {
     const data = await userModel.findOne({ email: email });
     if (data) {
-      return { error: "Email already exists" };
+      return { error: EMAIL_EXISTS_MSG };
     } else {
       password = bcrypt.hashSync(password);
       let newUser = new userModel({
