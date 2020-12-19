@@ -9,8 +9,11 @@ class AuthService {
     return allUser;
   }
   async usersSignup(name, email, password) {
-    password = bcrypt.hashSync(password);
-    try {
+    const data = await userModel.findOne({ email: email });
+    if (data) {
+      return { error: "Email already exists" };
+    } else {
+      password = bcrypt.hashSync(password);
       let newUser = new userModel({
         name,
         email,
@@ -18,14 +21,15 @@ class AuthService {
       });
       newUser.save();
       return newUser;
-    } catch (err) {
-      console.log(err);
     }
   }
 
   async adminSignup(name, email, password) {
-    password = bcrypt.hashSync(password);
-    try {
+    const data = await userModel.findOne({ email: email });
+    if (data) {
+      return { error: "Email already exists" };
+    } else {
+      password = bcrypt.hashSync(password);
       let newUser = new userModel({
         name,
         email,
@@ -34,14 +38,12 @@ class AuthService {
       });
       newUser.save();
       return newUser;
-    } catch (err) {
-      console.log(err);
     }
   }
 
   async signin(email, password) {
-    try {
-      const data = await userModel.findOne({ email: email });
+    const data = await userModel.findOne({ email: email });
+    if (data) {
       const login = await bcrypt.compare(password, data.password);
       if (login) {
         const token = jwt.sign(
@@ -54,8 +56,6 @@ class AuthService {
           user: encode,
         };
       }
-    } catch (err) {
-      console.log(err);
     }
   }
 }

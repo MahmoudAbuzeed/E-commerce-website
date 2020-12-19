@@ -1,52 +1,50 @@
-const userModel = require("../models/users");
-
 const UserService = require("../services/user");
-const userController = new UserService();
+const {
+  FAILURE_OLD_PASSWORD_MSG,
+  FAILURE_UPDATING_MSG,
+  REMOVED_SUCCESS_MSG,
+  NOT_FOUND_MSG,
+} = require("../Shared/constants");
+const userService = new UserService();
 
 exports.getAllUser = async (req, res) => {
-  try {
-    let Users = await userModel
-      .find({})
-      .populate("allProduct.id", "pName pImages pPrice")
-      .populate("user", "name email")
-      .sort({ _id: -1 });
-    if (Users) {
-      return res.json({ Users });
-    }
-  } catch (err) {
-    console.log(err);
+  const Users = await userService.getAllUsers();
+  if (Users) {
+    return res.status(201).json({ Users: Users });
+  } else {
+    return res.status(400).json({ message: NOT_FOUND_MSG });
   }
 };
 
 exports.getSingleUser = async (req, res) => {
   let { uId } = req.body;
-  const singleUser = await userController.getSingleUser(uId);
+  const singleUser = await userService.getSingleUser(uId);
   if (singleUser) {
     return res.status(201).json({ singleUser: singleUser });
   } else {
-    return res.status(400).json({ message: "Can not find user" });
+    return res.status(400).json({ message: NOT_FOUND_MSG });
   }
 };
 
 exports.editUser = async (req, res) => {
   let { uId, name, phoneNumber } = req.body;
-  const editedUser = await userController.editUser(uId, name, phoneNumber);
+  const editedUser = await userService.editUser(uId, name, phoneNumber);
   if (editedUser) {
     return res.status(201).json({ editedUser: editedUser });
   } else {
-    return res.status(400).json({ message: "Can not edit user" });
+    return res.status(400).json({ message: FAILURE_UPDATING_MSG });
   }
 };
 
 exports.deleteUser = async (req, res) => {
   let { uId } = req.body;
-  await userController.deleteUser(uId);
-  return res.status(201).json({ message: "User Deleted" });
+  await userService.deleteUser(uId);
+  return res.status(201).json({ message: REMOVED_SUCCESS_MSG });
 };
 
 exports.changeUserPassword = async (req, res) => {
   let { uId, oldPassword, newPassword } = req.body;
-  const changedPassword = await userController.changeUserPassword(
+  const changedPassword = await userService.changeUserPassword(
     uId,
     oldPassword,
     newPassword
@@ -54,6 +52,6 @@ exports.changeUserPassword = async (req, res) => {
   if (changedPassword) {
     return res.status(201).json({ changedPassword: changedPassword });
   } else {
-    return res.status(400).json({ message: "Your old password is wrong!!" });
+    return res.status(400).json({ message: FAILURE_OLD_PASSWORD_MSG });
   }
 };

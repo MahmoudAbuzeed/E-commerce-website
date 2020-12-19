@@ -2,17 +2,20 @@ const userModel = require("../models/users");
 const bcrypt = require("bcryptjs");
 
 class UserService {
+  async getAllUsers() {
+    let Users = await userModel
+      .find({})
+      .populate("allProduct.id", "pName pImages pPrice")
+      .populate("user", "name email")
+      .sort({ _id: -1 });
+    return Users;
+  }
+
   async getSingleUser(uId) {
-    try {
-      let User = await userModel
-        .findById(uId)
-        .select("name email phoneNumber userImage updatedAt createdAt");
-      if (User) {
-        return User;
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    let User = await userModel
+      .findById(uId)
+      .select("name email phoneNumber userImage updatedAt createdAt");
+    return User;
   }
 
   async editUser(uId, name, phoneNumber) {
@@ -27,14 +30,8 @@ class UserService {
   }
 
   async deleteUser(uId) {
-    try {
-      let deletedUser = await userModel.findByIdAndDelete(uId);
-      if (deletedUser) {
-        return deletedUser;
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    let deletedUser = await userModel.findByIdAndDelete(uId);
+    return deletedUser;
   }
 
   async changeUserPassword(uId, oldPassword, newPassword) {
@@ -47,12 +44,18 @@ class UserService {
       const oldPassCheck = await bcrypt.compare(oldPassword, data.password);
       if (oldPassCheck) {
         newPassword = bcrypt.hashSync(newPassword, 10);
-        let passChange = userModel.findOneAndUpdate(uId, {
-          password: newPassword,
-        });
-        if (passChange) {
+        const user = await userModel.findById(uId);
+        if (user) {
+          user.password = newPassword;
+
+          let passChange = await user.save();
           return passChange;
         }
+
+        //let passChange = userModel.findOneAndUpdate(uId, {
+        //  password: newPassword,
+        //});
+        //return passChange;
       }
     }
   }

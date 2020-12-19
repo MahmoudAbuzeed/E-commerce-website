@@ -1,6 +1,9 @@
-const categoryModel = require("../models/categories");
-
 const CategoryService = require("../services/category");
+const {
+  EXISTS_MSG,
+  FAILURE_UPDATING_MSG,
+  REMOVED_SUCCESS_MSG,
+} = require("../Shared/constants");
 
 const categoryService = new CategoryService();
 
@@ -21,7 +24,7 @@ exports.addCategory = async (req, res) => {
   if (addedCategory) {
     return res.status(201).json({ addedCategory: addedCategory });
   } else {
-    return res.status(400).json({ message: "Category already exists." });
+    return res.status(400).json({ message: EXISTS_MSG });
   }
 };
 
@@ -36,12 +39,12 @@ exports.editCategory = async (req, res) => {
   if (editedCategory) {
     return res.status(201).json({ editedCategory: editedCategory });
   } else {
-    return res.status(400).json({ message: " Error in Updating Product." });
+    return res.status(400).json({ message: FAILURE_UPDATING_MSG });
   }
 };
 
 exports.deleteCategory = async (req, res) => {
   let { cId } = req.body;
   await categoryService.deleteCategory(cId);
-  return res.status(201).json({ message: "Category Deleted" });
+  return res.status(201).json({ message: REMOVED_SUCCESS_MSG });
 };
