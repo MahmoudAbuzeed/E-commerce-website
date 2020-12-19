@@ -5,6 +5,12 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const {
+  PAGE_NOT_FOUND,
+  MONGO_CONNECTED_MSG,
+  MONGO_DISCONNECTED_MSG,
+  SERVER_MSG,
+} = require("./Shared/constants");
 
 // Import Router
 const Router = require("./routes/index");
@@ -12,12 +18,11 @@ const { handleError } = require("./Shared/lib/error");
 const logger = require("./Shared/lib/logger");
 const expressRequestId = require("express-request-id")();
 const requestLogger = require("./Shared/lib/requestLogger");
-const { PAGE_NOT_FOUND } = require("./Shared/constants");
 
 // Run Server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log("Server is running on ", PORT);
+  console.log(SERVER_MSG, PORT);
 });
 
 // Database Connection
@@ -27,8 +32,8 @@ mongoose
     useUnifiedTopology: true,
     useCreateIndex: true,
   })
-  .then(() => console.log("Mongo Database Connected Successfully"))
-  .catch((err) => console.log("Database Not Connected !!!"));
+  .then(() => console.log(MONGO_CONNECTED_MSG))
+  .catch((err) => console.log(MONGO_DISCONNECTED_MSG));
 
 app.use(expressRequestId);
 app.use(requestLogger);

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/keys");
+const { AUTHORIZATION_MSG, ADMIN_AUTH_MSG } = require("../Shared/constants");
 
 exports.loginCheck = (req, res, next) => {
   if (req.headers.authorization) {
@@ -7,14 +8,14 @@ exports.loginCheck = (req, res, next) => {
     const user = jwt.verify(token, JWT_SECRET);
     req.user = user;
   } else {
-    return res.status(400).json({ message: "Authorization required" });
+    return res.status(400).json({ message: AUTHORIZATION_MSG });
   }
   next();
 };
 
 exports.adminMiddleware = (req, res, next) => {
   if (req.user.role !== "admin") {
-    return res.status(400).json({ message: "Admin access denied" });
+    return res.status(400).json({ message: ADMIN_AUTH_MSG });
   }
   next();
 };
