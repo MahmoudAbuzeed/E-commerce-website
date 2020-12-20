@@ -10,8 +10,10 @@ beforeAll(async () => {
 });
 
 // Cleans up database between each test
-afterAll(async () => {
+afterAll(async (done) => {
   await User.deleteMany();
+  mongoose.connection.close();
+  done();
 });
 
 describe("Auth API", () => {
@@ -31,7 +33,7 @@ describe("Auth API", () => {
       .post("/api/admin/signup")
       .send({
         name: "admin",
-        email: "admin@gmail.com",
+        email: "admin123@gmail.com",
         password: "admin123",
       })
       .expect(201);

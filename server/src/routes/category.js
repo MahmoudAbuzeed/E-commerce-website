@@ -32,7 +32,7 @@ router.post(
   "/add-category",
   /*validateAddCategoryRequest,*/
   isRequestValidated,
-  loginCheck,
+  //loginCheck,
   upload.single("cImage"),
   addCategory
 );
@@ -40,14 +40,14 @@ router.post(
   "/edit-category",
   validateEditCategoryRequest,
   isRequestValidated,
-  loginCheck,
+  //loginCheck,
   editCategory
 );
 router.post(
   "/delete-category",
   validateDeleteCategoryRequest,
   isRequestValidated,
-  loginCheck,
+  // loginCheck,
   deleteCategory
 );
 
