@@ -1,6 +1,5 @@
 const categoryModel = require("../models/categories");
 const fs = require("fs");
-const { NOT_FOUND_MSG } = require("../Shared/constants");
 
 class CategoryService {
   async getAllCategory() {
