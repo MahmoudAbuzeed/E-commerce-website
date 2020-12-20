@@ -10,7 +10,7 @@ const userService = new UserService();
 exports.getAllUser = async (req, res) => {
   const Users = await userService.getAllUsers();
   if (Users) {
-    return res.status(201).json({ Users: Users });
+    return res.status(200).json({ Users: Users });
   } else {
     return res.status(400).json({ message: NOT_FOUND_MSG });
   }
@@ -20,7 +20,7 @@ exports.getSingleUser = async (req, res) => {
   let { uId } = req.body;
   const singleUser = await userService.getSingleUser(uId);
   if (singleUser) {
-    return res.status(201).json({ singleUser: singleUser });
+    return res.status(200).json({ singleUser: singleUser });
   } else {
     return res.status(400).json({ message: NOT_FOUND_MSG });
   }
