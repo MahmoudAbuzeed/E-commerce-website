@@ -1,11 +1,33 @@
 const request = require("supertest");
 const app = "http://localhost:8000";
 const mongoose = require("mongoose");
+const User = require("../models/users"); // Link to your user model
 const databaseName = "ecommerce";
 
-beforeAll(async () => {
+let token;
+
+beforeAll(async (done) => {
   const url = `mongodb://localhost/${databaseName}`;
   await mongoose.connect(url, { useNewUrlParser: true });
+
+  await request(app)
+    .post("/api/admin/signup")
+    .send({
+      name: "admin456",
+      email: "admin456@gmail.com",
+      password: "admin123",
+    })
+    .expect(201);
+  await request(app)
+    .post("/api/signin")
+    .send({
+      email: "admin456@gmail.com",
+      password: "admin123",
+    })
+    .then((res) => {
+      token = res.body.user.token; // save the token!
+      done();
+    });
 });
 
 let categoryId;
@@ -13,6 +35,7 @@ describe("Category API", () => {
   test("Should add category", async (done) => {
     await request(app)
       .post("/api/category/add-category")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         cName: "test add category3",
         cDescription: "test add desc",
@@ -33,6 +56,7 @@ describe("Category API", () => {
   test("Should edit category", async () => {
     await request(app)
       .post("/api/category/edit-category")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         cId: categoryId,
         cName: "test edit category",
@@ -46,6 +70,7 @@ describe("Category API", () => {
 test("Should delete category", async () => {
   await request(app)
     .post("/api/category/delete-category")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       cId: categoryId,
     })
@@ -54,7 +79,7 @@ test("Should delete category", async () => {
 
 // Cleans up database after test
 afterAll(async (done) => {
-  // await Category.deleteMany();
+  await User.deleteMany();
   mongoose.connection.close();
   done();
 });

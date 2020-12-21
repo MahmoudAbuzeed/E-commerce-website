@@ -30,9 +30,9 @@ const upload = multer({ storage: storage });
 router.get("/all-category", getAllCategory);
 router.post(
   "/add-category",
-  /*validateAddCategoryRequest,*/
+  validateAddCategoryRequest,
   isRequestValidated,
-  //loginCheck,
+  loginCheck,
   upload.single("cImage"),
   addCategory
 );
@@ -40,14 +40,14 @@ router.post(
   "/edit-category",
   validateEditCategoryRequest,
   isRequestValidated,
-  //loginCheck,
+  loginCheck,
   editCategory
 );
 router.post(
   "/delete-category",
   validateDeleteCategoryRequest,
   isRequestValidated,
-  // loginCheck,
+  loginCheck,
   deleteCategory
 );
 

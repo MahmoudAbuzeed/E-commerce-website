@@ -1,11 +1,33 @@
 const request = require("supertest");
 const app = "http://localhost:8000";
 const mongoose = require("mongoose");
+const User = require("../models/users"); // Link to your user model
 const databaseName = "ecommerce";
 
-beforeAll(async () => {
+let token;
+
+beforeAll(async (done) => {
   const url = `mongodb://localhost/${databaseName}`;
   await mongoose.connect(url, { useNewUrlParser: true });
+
+  await request(app)
+    .post("/api/admin/signup")
+    .send({
+      name: "admin789",
+      email: "admin789@gmail.com",
+      password: "admin123",
+    })
+    .expect(201);
+  await request(app)
+    .post("/api/signin")
+    .send({
+      email: "admin789@gmail.com",
+      password: "admin123",
+    })
+    .then((res) => {
+      token = res.body.user.token; // save the token!
+      done();
+    });
 });
 
 let imageId;
@@ -13,6 +35,7 @@ describe("Customize API", () => {
   test("Should add slide image", async (done) => {
     await request(app)
       .post("/api/customize/upload-slide-image")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         image: "test add image",
       })
@@ -24,12 +47,16 @@ describe("Customize API", () => {
   });
 
   test("Should get all images", async () => {
-    await request(app).get("/api/customize/get-slide-image").expect(200);
+    await request(app)
+      .get("/api/customize/get-slide-image")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200);
   });
 
   test("Should delete slide image", async () => {
     await request(app)
       .post("/api/customize/delete-slide-image")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         id: imageId,
       })
@@ -38,12 +65,15 @@ describe("Customize API", () => {
 });
 
 test("Should get dashboard", async () => {
-  await request(app).post("/api/customize/dashboard-data").expect(200);
+  await request(app)
+    .post("/api/customize/dashboard-data")
+    .set("Authorization", `Bearer ${token}`)
+    .expect(200);
 });
 
 // Cleans up database after test
 afterAll(async (done) => {
-  // await Category.deleteMany();
+  await User.deleteMany();
   mongoose.connection.close();
   done();
 });

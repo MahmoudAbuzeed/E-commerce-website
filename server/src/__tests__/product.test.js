@@ -1,11 +1,33 @@
 const request = require("supertest");
 const app = "http://localhost:8000";
 const mongoose = require("mongoose");
+const User = require("../models/users"); // Link to your user model
 const databaseName = "ecommerce";
 
-beforeAll(async () => {
+let token;
+
+beforeAll(async (done) => {
   const url = `mongodb://localhost/${databaseName}`;
   await mongoose.connect(url, { useNewUrlParser: true });
+
+  await request(app)
+    .post("/api/admin/signup")
+    .send({
+      name: "admin456",
+      email: "admin910@gmail.com",
+      password: "admin123",
+    })
+    .expect(201);
+  await request(app)
+    .post("/api/signin")
+    .send({
+      email: "admin910@gmail.com",
+      password: "admin123",
+    })
+    .then((res) => {
+      token = res.body.user.token; // save the token!
+      done();
+    });
 });
 
 let productId;
@@ -14,6 +36,7 @@ describe("Product API", () => {
   test("Should add product", async (done) => {
     await request(app)
       .post("/api/product/add-product")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         pName: "test add name",
         pDescription: " test add description",
@@ -76,6 +99,7 @@ describe("Product API", () => {
   test("Should edit product", async () => {
     await request(app)
       .post("/api/product/edit-product")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         pId: productId,
         pName: "test edit name",
@@ -93,6 +117,7 @@ describe("Product API", () => {
 test("Should delete order", async () => {
   await request(app)
     .post("/api/product/delete-product")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       pId: productId,
     })
@@ -101,7 +126,7 @@ test("Should delete order", async () => {
 
 // Cleans up database after test
 afterAll(async (done) => {
-  // await Category.deleteMany();
+  await User.deleteMany();
   mongoose.connection.close();
   done();
 });

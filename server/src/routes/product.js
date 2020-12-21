@@ -13,6 +13,8 @@ const {
   //addReview,
   //deleteReview,
 } = require("../controllers/product");
+const { loginCheck } = require("../middleware/auth");
+
 const {
   isRequestValidated,
   validateEditProductRequest,
@@ -64,15 +66,17 @@ router.post(
   getCartProduct
 );
 
-router.post("/add-product", upload.any(), addProduct);
+router.post("/add-product", loginCheck, upload.any(), addProduct);
 router.post(
   "/edit-product",
+  loginCheck,
   validateEditProductRequest,
   isRequestValidated,
   editProduct
 );
 router.post(
   "/delete-product",
+  loginCheck,
   validateDeleteProductRequest,
   isRequestValidated,
   deleteProduct

@@ -1,11 +1,34 @@
 const request = require("supertest");
 const app = "http://localhost:8000";
 const mongoose = require("mongoose");
+const User = require("../models/users"); // Link to your user model
+
 const databaseName = "ecommerce";
 
-beforeAll(async () => {
+let token;
+
+beforeAll(async (done) => {
   const url = `mongodb://localhost/${databaseName}`;
   await mongoose.connect(url, { useNewUrlParser: true });
+
+  await request(app)
+    .post("/api/admin/signup")
+    .send({
+      name: "admin456",
+      email: "admin456@gmail.com",
+      password: "admin123",
+    })
+    .expect(201);
+  await request(app)
+    .post("/api/signin")
+    .send({
+      email: "admin456@gmail.com",
+      password: "admin123",
+    })
+    .then((res) => {
+      token = res.body.user.token; // save the token!
+      done();
+    });
 });
 
 let orderId;
@@ -13,6 +36,7 @@ describe("Order API", () => {
   test("Should add order", async (done) => {
     await request(app)
       .post("/api/order/create-order")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         allProduct: [
           {
@@ -34,12 +58,16 @@ describe("Order API", () => {
   });
 
   test("Should get all orders", async () => {
-    await request(app).get("/api/order/all-orders").expect(200);
+    await request(app)
+      .get("/api/order/all-orders")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200);
   });
 
   test("Should update order", async () => {
     await request(app)
       .post("/api/order/update-order")
+      .set("Authorization", `Bearer ${token}`)
       .send({
         oId: orderId,
         status: "Shipped",
@@ -51,6 +79,7 @@ describe("Order API", () => {
 test("Should delete order", async () => {
   await request(app)
     .post("/api/order/delete-order")
+    .set("Authorization", `Bearer ${token}`)
     .send({
       oId: orderId,
     })
@@ -59,7 +88,7 @@ test("Should delete order", async () => {
 
 // Cleans up database after test
 afterAll(async (done) => {
-  // await Category.deleteMany();
+  await User.deleteMany();
   mongoose.connection.close();
   done();
 });
