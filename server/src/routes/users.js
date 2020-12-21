@@ -6,6 +6,7 @@ const {
   editUser,
   deleteUser,
   changeUserPassword,
+  addUser,
 } = require("../controllers/user");
 const {
   validateChangeUserPasswordRequest,
@@ -23,6 +24,7 @@ router.post(
   getSingleUser
 );
 
+router.post("/add-user", addUser);
 router.post(
   "/edit-user",
   validateEditUserRequest,

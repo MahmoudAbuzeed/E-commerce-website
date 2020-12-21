@@ -19,6 +19,22 @@ class UserService {
     return User;
   }
 
+  async addUser(name, email, password) {
+    const data = await userModel.findOne({ email: email });
+    if (data) {
+      return { error: EMAIL_EXISTS_MSG };
+    } else {
+      password = bcrypt.hashSync(password);
+      let newUser = new userModel({
+        name,
+        email,
+        password,
+      });
+      newUser.save();
+      return newUser;
+    }
+  }
+
   async editUser(uId, name, phoneNumber) {
     const user = await userModel.findById(uId);
     if (user) {

@@ -26,6 +26,16 @@ exports.getSingleUser = async (req, res) => {
   }
 };
 
+exports.addUser = async (req, res) => {
+  let { name, email, password } = req.body;
+  const addeduser = await userService.addUser(name, email, password);
+  if (addeduser.error) {
+    return res.status(400).json(addeduser.error);
+  } else {
+    return res.status(201).json({ user: addeduser });
+  }
+};
+
 exports.editUser = async (req, res) => {
   let { uId, name, phoneNumber } = req.body;
   const editedUser = await userService.editUser(uId, name, phoneNumber);
