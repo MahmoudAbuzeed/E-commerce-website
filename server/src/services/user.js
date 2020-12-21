@@ -1,6 +1,6 @@
 const userModel = require("../models/users");
 const bcrypt = require("bcryptjs");
-const { INVALID_MSG } = require("../Shared/constants");
+const { INVALID_MSG, EMAIL_EXISTS_MSG } = require("../Shared/constants");
 
 class UserService {
   async getAllUsers() {
