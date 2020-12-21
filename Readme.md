@@ -9,3 +9,4 @@
 <h6>$ npm start </h6>
 <h3> To run project</h3>
 <h6>$ npm test </h6>
+<img src="server/public/test/test.jpg"/>
