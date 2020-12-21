@@ -9,7 +9,7 @@ beforeAll(async () => {
 });
 
 let imageId;
-describe("Category API", () => {
+describe("Customize API", () => {
   test("Should add slide image", async (done) => {
     await request(app)
       .post("/api/customize/upload-slide-image")
