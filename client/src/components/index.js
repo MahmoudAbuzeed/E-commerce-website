@@ -1,5 +1,6 @@
 import React from "react";
 import { Home } from "./shop";
+import { DashboardAdmin } from "./admin";
 
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -10,6 +11,14 @@ const Routes = (props) => {
       <Switch>
         {/* Shop & Public Routes */}
         <Route exact path="/" component={Home} />
+
+        {/* Admin Routes */}
+        <Route
+          exact={true}
+          path="/admin/dashboard"
+          component={DashboardAdmin}
+        />
+        {/* Admin Routes */}
       </Switch>
     </Router>
   );
