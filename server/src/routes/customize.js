@@ -7,6 +7,11 @@ const {
   getAllData,
 } = require("../controllers/customize");
 const { loginCheck } = require("../middleware/auth");
+const {
+  validateDeleteImageRequest,
+  validateUploadImageRequest,
+  isRequestValidated,
+} = require("../validators/customize");
 
 const multer = require("multer");
 
@@ -22,10 +27,18 @@ var storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/get-slide-image", loginCheck, getImages);
-router.post("/delete-slide-image", loginCheck, deleteSlideImage);
+router.post(
+  "/delete-slide-image",
+  loginCheck,
+  validateDeleteImageRequest,
+  isRequestValidated,
+  deleteSlideImage
+);
 router.post(
   "/upload-slide-image",
   loginCheck,
+  validateUploadImageRequest,
+  isRequestValidated,
   upload.single("image"),
   uploadSlideImage
 );

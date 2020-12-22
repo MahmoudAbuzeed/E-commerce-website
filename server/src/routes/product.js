@@ -24,6 +24,7 @@ const {
   validateGetSingleProductRequest,
   validateGetWishProductRequest,
   validateGetCartProductRequest,
+  validateAddProductRequest,
 } = require("../validators/product");
 
 const multer = require("multer");
@@ -66,7 +67,14 @@ router.post(
   getCartProduct
 );
 
-router.post("/add-product", loginCheck, upload.any(), addProduct);
+router.post(
+  "/add-product",
+  loginCheck,
+  validateAddProductRequest,
+  isRequestValidated,
+  upload.any(),
+  addProduct
+);
 router.post(
   "/edit-product",
   loginCheck,

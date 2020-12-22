@@ -21,7 +21,7 @@ class ProductService {
   ) {
     let allImages = [];
     for (const img of images) {
-      allImages.push(img.filename);
+      allImages.push(img);
     }
     let newProduct = new productModel({
       pImages: allImages,
