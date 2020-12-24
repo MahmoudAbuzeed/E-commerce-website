@@ -13,8 +13,8 @@ exports.getAllCategory = async (req, res) => {
 };
 
 exports.addCategory = async (req, res) => {
-  let { cName, cDescription, cStatus, cImage } = req.body;
-  //let cImage = req.file.filename;
+  let { cName, cDescription, cStatus } = req.body;
+  let cImage = req.file.filename;
   const addedCategory = await categoryService.addCategory(
     cName,
     cDescription,

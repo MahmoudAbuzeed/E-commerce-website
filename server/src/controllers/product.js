@@ -17,9 +17,8 @@ exports.addProduct = async (req, res) => {
     pCategory,
     pOffer,
     pStatus,
-    images,
   } = req.body;
-  //let images = req.files;
+  let images = req.files;
   const addedProduct = await productService.addProduct(
     pName,
     pDescription,

@@ -41,7 +41,18 @@ class CategoryService {
   }
 
   async deleteCategory(cId) {
+    let deletedCategoryFile = await categoryModel.findById(cId);
+    const filePath = `../server/public/uploads/categories/${deletedCategoryFile.cImage}`;
     let deletedCategory = await categoryModel.findByIdAndDelete(cId);
+    if (deletedCategory) {
+      // Delete Image from tem folder
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+
     return deletedCategory;
   }
 }

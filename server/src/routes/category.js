@@ -9,7 +9,7 @@ const {
 const multer = require("multer");
 const { loginCheck } = require("../middleware/auth");
 const {
-  validateAddCategoryRequest,
+  //validateAddCategoryRequest,
   validateDeleteCategoryRequest,
   validateEditCategoryRequest,
   isRequestValidated,
@@ -30,8 +30,8 @@ const upload = multer({ storage: storage });
 router.get("/all-category", getAllCategory);
 router.post(
   "/add-category",
-  validateAddCategoryRequest,
-  isRequestValidated,
+  // validateAddCategoryRequest,
+  //isRequestValidated,
   loginCheck,
   upload.single("cImage"),
   addCategory

@@ -9,7 +9,7 @@ const {
 const { loginCheck } = require("../middleware/auth");
 const {
   validateDeleteImageRequest,
-  validateUploadImageRequest,
+  // validateUploadImageRequest,
   isRequestValidated,
 } = require("../validators/customize");
 
@@ -37,8 +37,8 @@ router.post(
 router.post(
   "/upload-slide-image",
   loginCheck,
-  validateUploadImageRequest,
-  isRequestValidated,
+  // validateUploadImageRequest,
+  // isRequestValidated,
   upload.single("image"),
   uploadSlideImage
 );

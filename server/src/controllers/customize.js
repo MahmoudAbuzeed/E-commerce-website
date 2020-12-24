@@ -11,8 +11,8 @@ exports.getImages = async (req, res) => {
 };
 
 exports.uploadSlideImage = async (req, res) => {
-  //let image = req.file.filename;
-  let { image } = req.body;
+  let image = req.file.filename;
+  //let { image } = req.body;
   const ImageUploaded = await customizeService.uploadSlideImage(image);
   if (ImageUploaded) {
     return res.status(201).json({ ImageUploaded: ImageUploaded });

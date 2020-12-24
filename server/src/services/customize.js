@@ -29,7 +29,17 @@ class CustomizeSlideBarService {
   }
 
   async deleteSlideImage(id) {
+    let deletedSlideImage = await customizeModel.findById(id);
+    const filePath = `../server/public/uploads/customize/${deletedSlideImage.slideImage}`;
     let deletedImage = await customizeModel.findByIdAndDelete(id);
+    if (deletedImage) {
+      // Delete Image from tem folder
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
     return deletedImage;
   }
 }
