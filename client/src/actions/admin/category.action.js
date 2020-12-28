@@ -15,13 +15,14 @@ const Headers = () => {
 export const getAllCategory = async () => {
     return async (dispatch) => {
         dispatch({ type: categoryConstants.GET_ALL_CATEGORIES_REQUEST });
-        let res = await axios.get(`${apiURL}/api/category/all-category`, Headers())
+        let res = await axios.get(`${apiURL}/api/category/all-category`)
         if (res.status === 200) {
             const { categoryList } = res.data;
+            console.log(categoryList)
         
         dispatch({
             type: categoryConstants.GET_ALL_CATEGORIES_SUCCESS,
-            payload: { categories: categoryList },
+            payload: { categories: categoryList }
           });
         } else {
           dispatch({

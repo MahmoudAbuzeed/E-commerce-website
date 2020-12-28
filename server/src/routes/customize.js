@@ -1,11 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  getImages,
-  deleteSlideImage,
-  uploadSlideImage,
-  getAllData,
-} = require("../controllers/customize");
+const { getImages, deleteSlideImage, uploadSlideImage, getAllData } = require("../controllers/customize");
 const { loginCheck } = require("../middleware/auth");
 const {
   validateDeleteImageRequest,
@@ -26,22 +21,16 @@ var storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/get-slide-image", loginCheck, getImages);
-router.post(
-  "/delete-slide-image",
-  loginCheck,
-  validateDeleteImageRequest,
-  isRequestValidated,
-  deleteSlideImage
-);
+router.get("/get-slide-image", /*loginCheck,*/ getImages);
+router.post("/delete-slide-image", /*loginCheck,*/ validateDeleteImageRequest, isRequestValidated, deleteSlideImage);
 router.post(
   "/upload-slide-image",
-  loginCheck,
+  /*loginCheck,*/
   // validateUploadImageRequest,
   // isRequestValidated,
   upload.single("image"),
   uploadSlideImage
 );
-router.post("/dashboard-data", loginCheck, getAllData);
+router.post("/dashboard-data", /*loginCheck,*/ getAllData);
 
 module.exports = router;

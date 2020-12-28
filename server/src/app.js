@@ -5,12 +5,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const {
-  PAGE_NOT_FOUND,
-  MONGO_CONNECTED_MSG,
-  MONGO_DISCONNECTED_MSG,
-  SERVER_MSG,
-} = require("./Shared/constants");
+const { PAGE_NOT_FOUND, MONGO_CONNECTED_MSG, MONGO_DISCONNECTED_MSG, SERVER_MSG } = require("./Shared/constants");
 
 // Import Router
 const Router = require("./routes/index");
