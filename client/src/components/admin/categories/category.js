@@ -7,7 +7,7 @@ import moment from "moment";
 
 const apiURL = process.env.REACT_APP_API_URL;
 
-const CategoryMenu = (props) => {
+const Category = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [id, setId] = useState("");
   const [cName, setName] = useState("");
@@ -295,4 +295,4 @@ const CategoryMenu = (props) => {
   );
 };
 
-export default CategoryMenu;
+export default Category;

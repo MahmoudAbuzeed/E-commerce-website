@@ -4,13 +4,6 @@ const initState = {
   categories: [],
   loading: false,
   error: null,
-  addCategoryModal: false,
-  editCategoryModal: {
-    modal: false,
-    cId: null,
-    des: "",
-    status: "",
-  },
 };
 
 const categoryReducer = (state = initState, action) => {

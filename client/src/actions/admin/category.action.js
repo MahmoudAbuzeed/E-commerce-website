@@ -50,7 +50,6 @@ export const saveCategory = (category) => {
       dispatch({ type: categoryConstants.ADD_NEW_CATEGORY_REQUEST });
       try {
         let res = await axios.post(`${apiURL}/api/category/add-category`, formData);
-        console.log("HHHHHERERER", res);
         if (res.status === 201) {
           dispatch({
             type: categoryConstants.ADD_NEW_CATEGORY_SUCCESS,
@@ -87,24 +86,6 @@ export const saveCategory = (category) => {
       }
     };
   }
-};
-
-export const editCategory = (cId, des, status) => {
-  let data = { cId: cId, cDescription: des, cStatus: status };
-  return async (dispatch) => {
-    dispatch({ type: categoryConstants.UPDATE_CATEGORIES_REQUEST });
-    let res = await axios.post(`${apiURL}/api/category/edit-category`, data);
-    if (res.status === 201) {
-      dispatch({ type: categoryConstants.UPDATE_CATEGORIES_SUCCESS });
-      dispatch(getAllCategory());
-    } else {
-      const { error } = res.data;
-      dispatch({
-        type: categoryConstants.UPDATE_CATEGORIES_FAILURE,
-        payload: { error },
-      });
-    }
-  };
 };
 
 export const deleteCategory = (cId) => {
