@@ -1,11 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  getAllCategory,
-  addCategory,
-  editCategory,
-  deleteCategory,
-} = require("../controllers/category");
+const { getAllCategory, addCategory, editCategory, deleteCategory } = require("../controllers/category");
 const multer = require("multer");
 const { loginCheck } = require("../middleware/auth");
 const {
@@ -32,23 +27,17 @@ router.post(
   "/add-category",
   // validateAddCategoryRequest,
   //isRequestValidated,
-  loginCheck,
+  //loginCheck,
   upload.single("cImage"),
   addCategory
 );
 router.post(
   "/edit-category",
-  validateEditCategoryRequest,
-  isRequestValidated,
-  loginCheck,
+  // validateEditCategoryRequest,
+  // isRequestValidated,
+  // loginCheck,
   editCategory
 );
-router.post(
-  "/delete-category",
-  validateDeleteCategoryRequest,
-  isRequestValidated,
-  loginCheck,
-  deleteCategory
-);
+router.post("/delete-category", validateDeleteCategoryRequest, isRequestValidated, /* loginCheck,*/ deleteCategory);
 
 module.exports = router;

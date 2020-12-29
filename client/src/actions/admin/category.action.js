@@ -1,103 +1,126 @@
 import axios from "axios";
 import { categoryConstants } from "../constants";
 
-const apiURL = process.env.REACT_APP_API_URL
+const apiURL = process.env.REACT_APP_API_URL;
 
-const BearerToken = () => localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).token : false
+const BearerToken = () => (localStorage.getItem("jwt") ? JSON.parse(localStorage.getItem("jwt")).token : false);
 const Headers = () => {
-    return {
-        headers: {
-            'token': `Bearer ${BearerToken()}`
-        }
-    }
-}
+  return {
+    headers: {
+      token: `Bearer ${BearerToken()}`,
+    },
+  };
+};
 
-export const getAllCategory = async () => {
+export const AllCategory = async () => {
+  try {
+    let res = await axios.get(`${apiURL}/api/category/all-category`, Headers());
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getAllCategory = () => {
+  return async (dispatch) => {
+    dispatch({ type: categoryConstants.GET_ALL_CATEGORIES_REQUEST });
+    let responseData = await AllCategory();
+    if (responseData && responseData.AllCategories) {
+      dispatch({
+        type: categoryConstants.GET_ALL_CATEGORIES_SUCCESS,
+        payload: responseData.AllCategories,
+      });
+    } else {
+      dispatch({
+        type: categoryConstants.GET_ALL_CATEGORIES_FAILURE,
+        payload: { error: responseData.error },
+      });
+    }
+  };
+};
+
+export const saveCategory = (category) => {
+  let formData = new FormData();
+  formData.append("cName", category.cName);
+  formData.append("cImage", category.cImage);
+  formData.append("cDescription", category.cDescription);
+  formData.append("cStatus", category.cStatus);
+
+  if (!category._id) {
     return async (dispatch) => {
-        dispatch({ type: categoryConstants.GET_ALL_CATEGORIES_REQUEST });
-        let res = await axios.get(`${apiURL}/api/category/all-category`)
-        if (res.status === 200) {
-            const { categoryList } = res.data;
-            console.log(categoryList)
-        
-        dispatch({
-            type: categoryConstants.GET_ALL_CATEGORIES_SUCCESS,
-            payload: { categories: categoryList }
+      dispatch({ type: categoryConstants.ADD_NEW_CATEGORY_REQUEST });
+      try {
+        let res = await axios.post(`${apiURL}/api/category/add-category`, formData);
+        console.log("HHHHHERERER", res);
+        if (res.status === 201) {
+          dispatch({
+            type: categoryConstants.ADD_NEW_CATEGORY_SUCCESS,
+            payload: { category: res.data.category },
           });
         } else {
           dispatch({
-            type: categoryConstants.GET_ALL_CATEGORIES_FAILURE,
-            payload: { error: res.data.error },
+            type: categoryConstants.ADD_NEW_CATEGORY_FAILURE,
+            payload: res.data.error,
           });
         }
-    }
-}
-
-export const createCategory = async ({ cName, cImage, cDescription, cStatus }) => {
-    let formData = new FormData();
-    formData.append("cImage", cImage)
-    formData.append("cName", cName)
-    formData.append("cDescription", cDescription)
-    formData.append("cStatus", cStatus)
-
-    return async (dispatch) => {
-        dispatch({ type: categoryConstants.ADD_NEW_CATEGORY_REQUEST });
-        try {
-            let res = await axios.post(`${apiURL}/api/category/add-category`, formData, Headers())
-            if (res.status === 201) {
-            dispatch({
-              type: categoryConstants.ADD_NEW_CATEGORY_SUCCESS,
-              payload: { category: res.data.category },
-            });
-          } else {
-            dispatch({
-              type: categoryConstants.ADD_NEW_CATEGORY_FAILURE,
-              payload: res.data.error,
-            });
-          }
-        } catch (error) {
-          console.log(error.response);
-        }
+      } catch (error) {
+        console.log(error.response);
+      }
     };
-
-    
-}
-
-export const editCategory = async (cId, des, status) => {
-    let data = { cId: cId, cDescription: des, cStatus: status }
+  } else {
+    let data = {
+      cId: category._id,
+      cName: category.cName,
+      cDescription: category.cDescription,
+      cStatus: category.cStatus,
+    };
     return async (dispatch) => {
-        dispatch({ type: categoryConstants.UPDATE_CATEGORIES_REQUEST });
-        let res = await axios.post(`${apiURL}/api/category/edit-category`, data, Headers())
-        if (res.status === 201) {
-          dispatch({ type: categoryConstants.UPDATE_CATEGORIES_SUCCESS });
-          dispatch(getAllCategory());
-        } else {
-          const { error } = res.data;
-          dispatch({
-            type: categoryConstants.UPDATE_CATEGORIES_FAILURE,
-            payload: { error },
-          });
-        }
-      };
-   
-}
+      dispatch({ type: categoryConstants.UPDATE_CATEGORIES_REQUEST });
+      let res = await axios.post(`${apiURL}/api/category/edit-category`, data);
+      if (res.status === 201) {
+        dispatch({ type: categoryConstants.UPDATE_CATEGORIES_SUCCESS });
+      } else {
+        const { error } = res.data;
+        dispatch({
+          type: categoryConstants.UPDATE_CATEGORIES_FAILURE,
+          payload: { error },
+        });
+      }
+    };
+  }
+};
 
-export const deleteCategory = async (cId) => {
+export const editCategory = (cId, des, status) => {
+  let data = { cId: cId, cDescription: des, cStatus: status };
+  return async (dispatch) => {
+    dispatch({ type: categoryConstants.UPDATE_CATEGORIES_REQUEST });
+    let res = await axios.post(`${apiURL}/api/category/edit-category`, data);
+    if (res.status === 201) {
+      dispatch({ type: categoryConstants.UPDATE_CATEGORIES_SUCCESS });
+      dispatch(getAllCategory());
+    } else {
+      const { error } = res.data;
+      dispatch({
+        type: categoryConstants.UPDATE_CATEGORIES_FAILURE,
+        payload: { error },
+      });
+    }
+  };
+};
 
-    return async (dispatch) => {
-        dispatch({ type: categoryConstants.DELETE_CATEGORIES_REQUEST });
-        let res = await axios.post(`${apiURL}/api/category/delete-category`, { cId }, Headers())
+export const deleteCategory = (cId) => {
+  return async (dispatch) => {
+    dispatch({ type: categoryConstants.DELETE_CATEGORIES_REQUEST });
+    let res = await axios.post(`${apiURL}/api/category/delete-category`, { cId });
 
-        if (res.status === 201) {
-          dispatch(getAllCategory());
-          dispatch({ type: categoryConstants.DELETE_CATEGORIES_SUCCESS });
-        } else {
-          const { error } = res.data;
-          dispatch({
-            type: categoryConstants.DELETE_CATEGORIES_FAILURE,
-            payload: { error },
-          });
-        }
-      };
-   
-}
+    if (res.status === 201) {
+      dispatch(getAllCategory());
+      dispatch({ type: categoryConstants.DELETE_CATEGORIES_SUCCESS });
+    } else {
+      const { error } = res.data;
+      dispatch({
+        type: categoryConstants.DELETE_CATEGORIES_FAILURE,
+        payload: { error },
+      });
+    }
+  };
+};
