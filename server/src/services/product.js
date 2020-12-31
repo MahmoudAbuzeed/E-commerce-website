@@ -3,22 +3,10 @@ const fs = require("fs");
 
 class ProductService {
   async getAllProducts() {
-    let Products = await productModel
-      .find({})
-      .populate("pCategory", "_id cName")
-      .sort({ _id: -1 });
+    let Products = await productModel.find({}).populate("pCategory", "_id cName").sort({ _id: -1 });
     return Products;
   }
-  async addProduct(
-    pName,
-    pDescription,
-    pPrice,
-    pQuantity,
-    pCategory,
-    pOffer,
-    pStatus,
-    images
-  ) {
+  async addProduct(pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus, images) {
     let allImages = [];
     for (const img of images) {
       allImages.push(img);
@@ -37,16 +25,7 @@ class ProductService {
     return save;
   }
 
-  async editProduct(
-    pId,
-    pName,
-    pDescription,
-    pPrice,
-    pQuantity,
-    pCategory,
-    pOffer,
-    pStatus
-  ) {
+  async editProduct(pId, pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus) {
     const product = await productModel.findById(pId);
     if (product) {
       product.pName = pName;
@@ -56,7 +35,6 @@ class ProductService {
       product.pCategory = pCategory;
       product.pOffer = pOffer;
       product.pStatus = pStatus;
-      updatedAt: Date.now();
       let editedProduct = await product.save();
       return editedProduct;
     }
@@ -89,9 +67,7 @@ class ProductService {
   }
 
   async getProductByCategory(cId) {
-    let products = await productModel
-      .find({ pCategory: cId })
-      .populate("pCategory", "cName");
+    let products = await productModel.find({ pCategory: cId }).populate("pCategory", "cName");
     return products;
   }
 

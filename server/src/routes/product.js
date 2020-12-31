@@ -42,34 +42,14 @@ const upload = multer({ storage: storage });
 
 router.get("/all-product", getAllProduct);
 
-router.post(
-  "/product-by-category",
-  validateGetProductByCategoryRequest,
-  isRequestValidated,
-  getProductByCategory
-);
-router.post(
-  "/product-by-price",
-  validateGetProductByPriceRequest,
-  isRequestValidated,
-  getProductByPrice
-);
-router.post(
-  "/wish-product",
-  validateGetWishProductRequest,
-  isRequestValidated,
-  getWishProduct
-);
-router.post(
-  "/cart-product",
-  validateGetCartProductRequest,
-  isRequestValidated,
-  getCartProduct
-);
+router.post("/product-by-category", validateGetProductByCategoryRequest, isRequestValidated, getProductByCategory);
+router.post("/product-by-price", validateGetProductByPriceRequest, isRequestValidated, getProductByPrice);
+router.post("/wish-product", validateGetWishProductRequest, isRequestValidated, getWishProduct);
+router.post("/cart-product", validateGetCartProductRequest, isRequestValidated, getCartProduct);
 
 router.post(
   "/add-product",
-  loginCheck,
+  // loginCheck,
   // validateAddProductRequest,
   // isRequestValidated,
   upload.any(),
@@ -77,24 +57,19 @@ router.post(
 );
 router.post(
   "/edit-product",
-  loginCheck,
+  // loginCheck,
   validateEditProductRequest,
   isRequestValidated,
   editProduct
 );
 router.post(
   "/delete-product",
-  loginCheck,
+  // loginCheck,
   validateDeleteProductRequest,
   isRequestValidated,
   deleteProduct
 );
-router.post(
-  "/single-product",
-  validateGetSingleProductRequest,
-  isRequestValidated,
-  getSingleProduct
-);
+router.post("/single-product", validateGetSingleProductRequest, isRequestValidated, getSingleProduct);
 
 // router.post("/add-review", addReview);
 // router.post("/delete-review", deleteReview);

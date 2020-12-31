@@ -30,22 +30,8 @@ export const getAllProduct = () => {
   };
 };
 
-export const createPorductImage = async ({ pImage }) => {
-  /* Most important part for uploading multiple image  */
+export const saveProduct = (product) => {
   let formData = new FormData();
-  for (const file of pImage) {
-    formData.append("pImage", file);
-  }
-  /* Most important part for uploading multiple image  */
-};
-
-export const saveProduct = async (product) => {
-  /* Most important part for uploading multiple image  */
-  let formData = new FormData();
-  for (const file of pImage) {
-    formData.append("pImage", file);
-  }
-  /* Most important part for uploading multiple image  */
   formData.append("pName", product.pName);
   formData.append("pDescription", product.pDescription);
   formData.append("pStatus", product.pStatus);
@@ -54,7 +40,10 @@ export const saveProduct = async (product) => {
   formData.append("pPrice", product.pPrice);
   formData.append("pOffer", product.pOffer);
 
-  if (!category._id) {
+  if (!product._id) {
+    for (const file of product.pImages) {
+      formData.append("pImage", file);
+    }
     return async (dispatch) => {
       dispatch({ type: productConstants.ADD_NEW_PRODUCT_REQUEST });
       try {
@@ -76,18 +65,18 @@ export const saveProduct = async (product) => {
     };
   } else {
     let data = {
-      pId: product.pId,
+      pId: product._id,
       pName: product.pName,
       pDescription: product.pDescription,
-      pStatus: product.pStatus,
-      pCategory: product.pCategory,
-      pQuantity: product.pQuantity,
       pPrice: product.pPrice,
+      pQuantity: product.pQuantity,
+      pCategory: product.pCategory,
       pOffer: product.pOffer,
+      pStatus: product.pStatus,
     };
     return async (dispatch) => {
       dispatch({ type: productConstants.UPDATE_PRODUCT_REQUEST });
-      let res = await axios.post(`${apiURL}/api/category/edit-category`, data);
+      let res = await axios.post(`${apiURL}/api/product/edit-product`, data);
       if (res.status === 201) {
         dispatch({ type: productConstants.UPDATE_PRODUCT_SUCCESS });
       } else {
