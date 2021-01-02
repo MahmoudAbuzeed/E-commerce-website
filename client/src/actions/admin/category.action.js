@@ -92,7 +92,6 @@ export const deleteCategory = (cId) => {
   return async (dispatch) => {
     dispatch({ type: categoryConstants.DELETE_CATEGORIES_REQUEST });
     let res = await axios.post(`${apiURL}/api/category/delete-category`, { cId });
-
     if (res.status === 201) {
       dispatch(getAllCategory());
       dispatch({ type: categoryConstants.DELETE_CATEGORIES_SUCCESS });

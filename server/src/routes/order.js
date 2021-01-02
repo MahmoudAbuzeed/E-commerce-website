@@ -1,12 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  getAllOrders,
-  getOrderByUser,
-  createOrder,
-  updateOrder,
-  deleteOrder,
-} = require("../controllers/order");
+const { getAllOrders, getOrderByUser, createOrder, updateOrder, deleteOrder } = require("../controllers/order");
 const { loginCheck } = require("../middleware/auth");
 
 const {
@@ -20,7 +14,7 @@ const {
 router.get("/all-orders", getAllOrders);
 router.post(
   "/order-by-user",
-  loginCheck,
+  // loginCheck,
   validateGetOrderByUserRequest,
   isRequestValidated,
   getOrderByUser
@@ -28,21 +22,21 @@ router.post(
 
 router.post(
   "/create-order",
-  loginCheck,
+  // loginCheck,
   validateCreateOrderRequest,
   isRequestValidated,
   createOrder
 );
 router.post(
   "/update-order",
-  loginCheck,
+  // loginCheck,
   validateUpdateOrderRequest,
   isRequestValidated,
   updateOrder
 );
 router.post(
   "/delete-order",
-  loginCheck,
+  // loginCheck,
   validateDeleteOrderRequest,
   isRequestValidated,
   deleteOrder
