@@ -128,6 +128,7 @@ const Category = (props) => {
                     type="text"
                     value={cName}
                     onChange={(e) => setName(e.target.value)}
+                    required
                   />
                 </div>
               ) : (
@@ -144,6 +145,7 @@ const Category = (props) => {
                   rows={5}
                   onChange={(e) => setDescription(e.target.value)}
                   value={cDescription}
+                  required
                 />
               </div>
 
@@ -157,6 +159,7 @@ const Category = (props) => {
                     accept=".jpg, .jpeg, .png"
                     className="px-4 py-2 border focus:outline-none"
                     id="image"
+                    required
                   />
                 </div>
               ) : (
@@ -172,6 +175,9 @@ const Category = (props) => {
                   className="px-4 py-2 border focus:outline-none"
                   id="status"
                 >
+                  <option name="status" value="Active">
+                    Select Status
+                  </option>
                   <option name="status" value="Active">
                     Active
                   </option>

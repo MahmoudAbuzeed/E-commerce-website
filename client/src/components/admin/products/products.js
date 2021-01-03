@@ -141,6 +141,7 @@ const Product = (props) => {
                   onChange={(e) => setName(e.target.value)}
                   className="px-4 py-2 border focus:outline-none"
                   type="text"
+                  required
                 />
               </div>
               <div className="w-1/2 flex flex-col space-y-1 space-x-1">
@@ -151,6 +152,7 @@ const Product = (props) => {
                   type="number"
                   className="px-4 py-2 border focus:outline-none"
                   id="price"
+                  required
                 />
               </div>
 
@@ -164,6 +166,7 @@ const Product = (props) => {
                   id="description"
                   cols={5}
                   rows={2}
+                  required
                 />
               </div>
               {!id ? (
@@ -177,6 +180,7 @@ const Product = (props) => {
                     className="px-4 py-2 border focus:outline-none"
                     id="image"
                     multiple
+                    required
                   />
                 </div>
               ) : (
@@ -194,6 +198,9 @@ const Product = (props) => {
                     id="status"
                   >
                     <option name="status" value="Active">
+                      Select Status
+                    </option>
+                    <option name="status" value="Active">
                       Active
                     </option>
                     <option name="status" value="Disabled">
@@ -209,6 +216,7 @@ const Product = (props) => {
                     name="status"
                     className="px-4 py-2 border focus:outline-none"
                     id="status"
+                    required
                   >
                     <option disabled value="">
                       Select a category
@@ -235,6 +243,7 @@ const Product = (props) => {
                     type="number"
                     className="px-4 py-2 border focus:outline-none"
                     id="quantity"
+                    required
                   />
                 </div>
                 <div className="w-1/2 flex flex-col space-y-1">
@@ -245,6 +254,7 @@ const Product = (props) => {
                     type="number"
                     className="px-4 py-2 border focus:outline-none"
                     id="offer"
+                    required
                   />
                 </div>
               </div>
